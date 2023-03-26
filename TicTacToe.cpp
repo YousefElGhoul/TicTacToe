@@ -112,7 +112,17 @@ class Scores{
             }
         }
     private:
-
+        static void swapData(PlayerData* xp, PlayerData* yp){
+            PlayerData temp = *xp;
+            *xp = *yp;
+            *yp = temp;
+        }
+        static void sortData(PlayerData arr[]){
+            for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE - 1; i++)
+                for (int j = 0; j < HIGH_SCORE_FILE_ARRAY_SIZE - i - 1; j++)
+                    if(arr[j].getScore() < arr[j+1].getScore())
+                        swapData(&arr[j], &arr[j+1]);
+        }
 };
 
 class Display{
