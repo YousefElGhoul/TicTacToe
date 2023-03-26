@@ -38,18 +38,19 @@ using namespace std;
 #define VS_STATE_HUM 1
 #define VS_STATE_COM 0
 
+#define HIGH_SCORE_FILE_ARRAY_SIZE 10
+#define HIGH_SCORE_FILE_NAME "high_scores.dat"
+
 char board[9] = {};
 char arrow;
 int selector, vs_state = 1, player = 1, counter = 0;
 string lineInput;
 
 class PlayerData{
-    private:
-        string name;
-        int score;
     public:
-        PlayerData(string str, int num);
-        
+        PlayerData(string str, int num): name(str), score(num){};
+
+
         void setName(string str){name = str;}
         void setScore(int num){score = num;}
         string getName(){return name;}
@@ -57,19 +58,24 @@ class PlayerData{
 
         bool isEmpty(){return name.empty();}
         void incScore(){score++;}
+    private:
+        string name;
+        int score;
 };
-
-PlayerData::PlayerData(string str, int num){
-    name = str;
-    score = num;
-}
-
 
 PlayerData *player1 = new PlayerData("", 0);
 PlayerData *player2 = new PlayerData("", 0);
+PlayerData *temp = new PlayerData("", 0);
 
 int isEven(int x){return x % 2 == 0 ? 2 : 1;}
 string getName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
+
+class Scores{
+    public:
+
+    private:
+
+};
 
 class Display{
     public:
@@ -392,7 +398,7 @@ class Menus{
                 switch (selector){
                 case 'R':
                     TicTacToe::initGame();
-                    Menus::select(VS);
+                    Menus::select(GAME);
                     break;
                 case 'E':
                     exitProgram();
