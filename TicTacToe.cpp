@@ -96,6 +96,21 @@ class Scores{
                 file.close();
             }
         }
+        static void saveHighScores(){
+            fstream file;
+            file.open(HIGH_SCORE_FILE_NAME, ios::out);
+            if(file.is_open()){
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
+                    file << VS_Hum_Scores[i].getName() << "\n";
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
+                    file << VS_Hum_Scores[i].getScore() << "\n";
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
+                    file << VS_Com_Scores[i].getName() << "\n";
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
+                    file << VS_Com_Scores[i].getScore() << "\n";
+                file.close();
+            }
+        }
     private:
 
 };
