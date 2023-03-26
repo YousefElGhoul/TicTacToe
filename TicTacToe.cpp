@@ -43,18 +43,13 @@ char arrow;
 int selector, vs_state = 1, player = 1, counter = 0;
 string lineInput;
 
-int isEven(int x){return x % 2 == 0 ? 2 : 1;}
-string getName(int player){return isEven(player) == 1 ? player1.getName() : player2.getName();}
-
-
 class PlayerData{
     private:
         string name;
         int score;
     public:
         PlayerData(string str, int num);
-        ~PlayerData();
-
+        
         void setName(string str){name = str;}
         void setScore(int num){score = num;}
         string getName(){return name;}
@@ -69,12 +64,12 @@ PlayerData::PlayerData(string str, int num){
     score = num;
 }
 
-PlayerData::~PlayerData(){
-    name = "Player";
-    score = 0;
-}
 
-PlayerData player1, player2;
+PlayerData *player1 = new PlayerData("", 0);
+PlayerData *player2 = new PlayerData("", 0);
+
+int isEven(int x){return x % 2 == 0 ? 2 : 1;}
+string getName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
 
 class Display{
     public:
@@ -87,7 +82,7 @@ class Display{
             print(str);
         }
         static void printBoard(){
-            cout << player1.getName() << " (X) Score [" << player1.getScore() << "]  -  " << player2.getName() << " (O) Score [" << player2.getScore() << "]" << endl << endl
+            cout << player1->getName() << " (X) Score [" << player1->getScore() << "]  -  " << player2->getName() << " (O) Score [" << player2->getScore() << "]" << endl << endl
                  << "\t\t\t\t\t\tTurn: " << getName(player) << endl << endl
                  << "\t\t\t\t\t\t     |     |     " << endl
                  << "\t\t\t\t\t\t  " << board[0] << "  |  " << board[1] << "  |  " << board[2] << endl
@@ -274,21 +269,21 @@ class Menus{
                 if(vs_state == VS_STATE_COM){
                     cout << "Player 1: \n";
                     getline(cin, lineInput);
-                    player1.setName(lineInput);
-                    if(player1.isEmpty())
-                        player1.setName("Player 1");
+                    player1->setName(lineInput);
+                    if(player1->isEmpty())
+                        player1->setName("Player 1");
                 }
                 else{
                     cout << "Player 1: \n";
                     getline(cin, lineInput);
-                    player1.setName(lineInput);
-                    if(player1.isEmpty())
-                        player1.setName("Player 1");
+                    player1->setName(lineInput);
+                    if(player1->isEmpty())
+                        player1->setName("Player 1");
                     cout << "\nPlayer 2: \n";
                     getline(cin, lineInput);
-                    player2.setName(lineInput);
-                    if(player2.isEmpty())
-                        player2.setName("Player 2");
+                    player2->setName(lineInput);
+                    if(player2->isEmpty())
+                        player2->setName("Player 2");
                 }
                 Menus::select(GAME);
                 break;
@@ -353,10 +348,10 @@ class Menus{
                 cout << "\t\t\t\t\t\t" << getName(player) << " Wins!\n";
                 switch (isEven(player)){
                 case 1:
-                    player1.incScore();
+                    player1->incScore();
                     break;
                 case 2:
-                    player2.incScore();
+                    player2->incScore();
                 default:
                     break;
                 }
