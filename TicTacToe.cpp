@@ -72,7 +72,30 @@ string getName(int player){return isEven(player) == 1 ? player1->getName() : pla
 
 class Scores{
     public:
-
+        static PlayerData VS_Hum_Scores[HIGH_SCORE_FILE_ARRAY_SIZE], VS_Com_Scores[HIGH_SCORE_FILE_ARRAY_SIZE];
+        static void readHighScores(){
+            fstream file;
+            file.open(HIGH_SCORE_FILE_NAME, ios::in);
+            if(file.is_open()){
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
+                    getline(file, lineInput);
+                    VS_Hum_Scores[i].setName(lineInput);
+                }
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
+                    getline(file, lineInput);
+                    VS_Hum_Scores[i].setScore(stoi(lineInput));
+                }
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
+                    getline(file, lineInput);
+                    VS_Com_Scores[i].setName(lineInput);
+                }
+                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
+                    getline(file, lineInput);
+                    VS_Com_Scores[i].setScore(stoi(lineInput));
+                }
+                file.close();
+            }
+        }
     private:
 
 };
