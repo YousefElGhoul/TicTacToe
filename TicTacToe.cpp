@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 
 using namespace std;
@@ -143,7 +144,7 @@ class Navigation{
         }
 };
 
-class Game{
+class TicTacToe{
     public:
         static void initGame(){
             clearBoard();
@@ -302,7 +303,7 @@ class Menus{
                 }
                 Display::refresh(LOGO);
                 Display::printBoard();
-                switch (Game::checkWin()){
+                switch (TicTacToe::checkWin()){
                 case GAME_STATE_ONGOING:
                     player++;
                     Menus::select(GAME);
@@ -363,7 +364,7 @@ class Menus{
                 }while (arrow != KEY_ENTER);
                 switch (selector){
                 case 'R':
-                    Game::initGame();
+                    TicTacToe::initGame();
                     Menus::select(VS);
                     break;
                 case 'E':
@@ -381,7 +382,7 @@ class Menus{
 
 void initProgram(){
     Display::initDisplay();
-    Game::initGame();
+    TicTacToe::initGame();
     Menus::select(START);
 }
 
