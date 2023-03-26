@@ -37,9 +37,9 @@ using namespace std;
 #define VS_STATE_HUM 1
 #define VS_STATE_COM 0
 
-char board[9] = {};
+char board[9] = {' ', ' ', ' ', ' ', '^', ' ', ' ', ' ', ' '};
 char arrow;
-int selector, vs_state = 1, player = 1;
+int selector, vs_state = 1, player = 1, counter = 0;
 string player1 = "Player 1", player2 = "Player 2";
 int score1 = 0, score2 = 0;
 
@@ -310,10 +310,16 @@ class Game{
                 return GAME_STATE_ONGOING;
         }
         static void MoveUp(){
+            if(counter == 3){
+                counter = 0;
+                MoveRight();
+            }
             selector -= 3;
             selector = selector <= 0 ? selector + 9 : selector;
-            if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
+            if (board[selector - 1] == 'X' || board[selector - 1] == 'O'){
+                counter++;
                 MoveUp();
+            }
             else{
                 removeSelector();
                 board[selector - 1] = '^';
@@ -322,10 +328,16 @@ class Game{
             }
         }
         static void MoveDown(){
+            if(counter == 3){
+                counter = 0;
+                MoveLeft();
+            }
             selector += 3;
             selector = selector > 9 ? selector - 9 : selector;
-            if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
+            if (board[selector - 1] == 'X' || board[selector - 1] == 'O'){
+                counter++;
                 MoveDown();
+            }
             else{
                 removeSelector();
                 board[selector - 1] = '^';
