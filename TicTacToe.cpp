@@ -38,8 +38,10 @@ using namespace std;
 #define VS_STATE_HUM 1
 #define VS_STATE_COM 0
 
+#define HIGH_SCORE_FILE_SIZE 5
 #define HIGH_SCORE_FILE_ARRAY_SIZE 5
 #define HIGH_SCORE_FILE_NAME "high_scores.dat"
+#define HIGH_SCORE_FILE_DEFAULT "Yousef\nNicole\nOwen\nPenny\nMalika\n10\n9\n8\n7\n6\n"
 
 char board[9] = {};
 char arrow;
@@ -74,6 +76,19 @@ PlayerData High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE] = {*empty, *empty, *empty, *e
 
 class Scores{
     public:
+        static void checkFile(){
+            fstream file;
+            file.open(HIGH_SCORE_FILE_NAME);
+            if(!file){
+                file.open(HIGH_SCORE_FILE_NAME, ios::out);
+                if(file.is_open()){
+                    for (int i = 0; i < HIGH_SCORE_FILE_SIZE; i++)
+                        file << HIGH_SCORE_FILE_DEFAULT;
+                    file.close();
+                }
+            }
+            file.close();
+        }
         static void readHighScores(){
             fstream file;
             file.open(HIGH_SCORE_FILE_NAME, ios::in);
@@ -101,6 +116,11 @@ class Scores{
                 file.close();
             }
         }
+        static void refreshHighScores(){
+            addScore(*player1);
+            addScore(*player2);
+            saveHighScores();
+        }
     private:
         static void swapData(PlayerData* xp, PlayerData* yp){
             PlayerData temp = *xp;
@@ -112,6 +132,12 @@ class Scores{
                 for (int j = 0; j < HIGH_SCORE_FILE_ARRAY_SIZE - i - 1; j++)
                     if(High_Scores[j].getScore() < High_Scores[j+1].getScore())
                         swapData(&High_Scores[j], &High_Scores[j+1]);
+        }
+        static void addScore(PlayerData pd){
+            if(pd.getScore() > High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE - 1].getScore()){
+                High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE - 1] = pd;
+                sortData();
+            }
         }
 };
 
@@ -139,6 +165,7 @@ class Display{
                  << "\t\t\t\t\t\t     |     |     " << endl << endl;
         }
         static void printScores(){
+            Scores::refreshHighScores();
             refresh(LOGO);
             for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
                 cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ << endl 
@@ -471,6 +498,7 @@ class Menus{
 };
 
 void initProgram(){
+    Scores::checkFile();
     Scores::readHighScores();
     Display::initDisplay();
     TicTacToe::initGame();
