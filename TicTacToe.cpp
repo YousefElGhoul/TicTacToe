@@ -38,7 +38,7 @@ using namespace std;
 #define VS_STATE_HUM 1
 #define VS_STATE_COM 0
 
-#define HIGH_SCORE_FILE_ARRAY_SIZE 10
+#define HIGH_SCORE_FILE_ARRAY_SIZE 5
 #define HIGH_SCORE_FILE_NAME "high_scores.dat"
 
 char board[9] = {};
@@ -65,35 +65,29 @@ class PlayerData{
 
 PlayerData *player1 = new PlayerData("", 0);
 PlayerData *player2 = new PlayerData("", 0);
-PlayerData *temp = new PlayerData("", 0);
+PlayerData *empty = new PlayerData("", 0);
 
 int isEven(int x){return x % 2 == 0 ? 2 : 1;}
 string getName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
 
+PlayerData High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE] = {*empty, *empty, *empty, *empty, *empty};
+
 class Scores{
     public:
-        static PlayerData VS_Hum_Scores[HIGH_SCORE_FILE_ARRAY_SIZE], VS_Com_Scores[HIGH_SCORE_FILE_ARRAY_SIZE];
         static void readHighScores(){
             fstream file;
             file.open(HIGH_SCORE_FILE_NAME, ios::in);
             if(file.is_open()){
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
                     getline(file, lineInput);
-                    VS_Hum_Scores[i].setName(lineInput);
+                    High_Scores[i].setName(lineInput);
                 }
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
                     getline(file, lineInput);
-                    VS_Hum_Scores[i].setScore(stoi(lineInput));
-                }
-                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
-                    getline(file, lineInput);
-                    VS_Com_Scores[i].setName(lineInput);
-                }
-                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
-                    getline(file, lineInput);
-                    VS_Com_Scores[i].setScore(stoi(lineInput));
+                    High_Scores[i].setScore(stoi(lineInput));
                 }
                 file.close();
+                sortData();
             }
         }
         static void saveHighScores(){
@@ -101,13 +95,9 @@ class Scores{
             file.open(HIGH_SCORE_FILE_NAME, ios::out);
             if(file.is_open()){
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
-                    file << VS_Hum_Scores[i].getName() << "\n";
+                    file << High_Scores[i].getName() << "\n";
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
-                    file << VS_Hum_Scores[i].getScore() << "\n";
-                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
-                    file << VS_Com_Scores[i].getName() << "\n";
-                for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
-                    file << VS_Com_Scores[i].getScore() << "\n";
+                    file << High_Scores[i].getScore() << "\n";
                 file.close();
             }
         }
@@ -117,11 +107,11 @@ class Scores{
             *xp = *yp;
             *yp = temp;
         }
-        static void sortData(PlayerData arr[]){
+        static void sortData(){
             for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE - 1; i++)
                 for (int j = 0; j < HIGH_SCORE_FILE_ARRAY_SIZE - i - 1; j++)
-                    if(arr[j].getScore() < arr[j+1].getScore())
-                        swapData(&arr[j], &arr[j+1]);
+                    if(High_Scores[j].getScore() < High_Scores[j+1].getScore())
+                        swapData(&High_Scores[j], &High_Scores[j+1]);
         }
 };
 
@@ -147,6 +137,17 @@ class Display{
                  << "\t\t\t\t\t\t     |     |     " << endl
                  << "\t\t\t\t\t\t  " << board[6] << "  |  " << board[7] << "  |  " << board[8] << endl
                  << "\t\t\t\t\t\t     |     |     " << endl << endl;
+        }
+        static void printScores(){
+            refresh(LOGO);
+            for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
+                cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ << endl 
+                     << "\t\t\t" << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() /*<< "\t\t"  << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() */<<  endl;
+                if(i != HIGH_SCORE_FILE_ARRAY_SIZE - 1)
+                    cout << "\t\t\t" << "________________|________________" /*<< "\t" << "________________|________________"*/ <<  endl;
+                else cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ <<  endl;
+            }
+            system("pause");
         }
     private:
         static void clear(){system("CLS");}
@@ -272,7 +273,10 @@ class TicTacToe{
         }
 };
 
-void exitProgram(){exit(0);}
+void exitProgram(){
+    Scores::saveHighScores();
+    exit(0);
+}
 
 class Menus{
     public:
@@ -449,10 +453,15 @@ class Menus{
                     Menus::select(GAME);
                     break;
                 case 'E':
-                    exitProgram();
+                    Menus::select(HIGH_SCORES);
                 default:
                     break;
                 }
+                break;
+            case HIGH_SCORES:
+                Display::refresh(LOGO);
+                Display::printScores();
+                exitProgram();
                 break;
             default:
                 cout << "\nMissing Screen\n";
@@ -462,6 +471,7 @@ class Menus{
 };
 
 void initProgram(){
+    Scores::readHighScores();
     Display::initDisplay();
     TicTacToe::initGame();
     Menus::select(START);
