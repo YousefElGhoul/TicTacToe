@@ -2,8 +2,6 @@
 #include <fstream>
 #include <conio.h>
 
-using namespace std;
-
 #define LOGO "\t\t\t      _____  _  ____      _____  ____  ____      _____  ____  _____\n\t\t\t     /__ __\\/ \\/   _\\    /__ __\\/  _ \\/   _\\    /__ __\\/  _ \\/  __/\n\t\t\t       / \\  | ||  /  _____ / \\  | / \\||  /  _____ / \\  | / \\||  \\  \n\t\t\t       | |  | ||  \\__\\____\\| |  | |-|||  \\__\\____\\| |  | \\_/||  /_ \n\t\t\t       \\_/  \\_/\\____/      \\_/  \\_/ \\|\\____/      \\_/  \\____/\\____\\\n\n"
 
 #define START 0
@@ -12,13 +10,12 @@ using namespace std;
 #define START_MENU_EXIT_SELECTED "\t\t\t      _____  _  ____      _____  ____  ____      _____  ____  _____\n\t\t\t     /__ __\\/ \\/   _\\    /__ __\\/  _ \\/   _\\    /__ __\\/  _ \\/  __/\n\t\t\t       / \\  | ||  /  _____ / \\  | / \\||  /  _____ / \\  | / \\||  \\  \n\t\t\t       | |  | ||  \\__\\____\\| |  | |-|||  \\__\\____\\| |  | \\_/||  /_ \n\t\t\t       \\_/  \\_/\\____/      \\_/  \\_/ \\|\\____/      \\_/  \\____/\\____\\\n\n  ________________________\n |                        |\n |         START          |\n |________________________|\n \t ________________________\n \t|                        |\n \t|         EXIT           |\n \t|________________________|\n"
 #define GAME 1
 #define VS 2
-// #define VS_MENU
+// #define VS_MENU                  To be Implemented
 #define WIN 3
 #define LOSE 4
 #define DRAW 5
 #define NAME 6
 #define HIGH_SCORES 7
-// #define HIGH_SCORES_MENU
 #define RESTART 8
 #define RESTART_MENU "\t\t\t      _____  _  ____      _____  ____  ____      _____  ____  _____\n\t\t\t     /__ __\\/ \\/   _\\    /__ __\\/  _ \\/   _\\    /__ __\\/  _ \\/  __/\n\t\t\t       / \\  | ||  /  _____ / \\  | / \\||  /  _____ / \\  | / \\||  \\  \n\t\t\t       | |  | ||  \\__\\____\\| |  | |-|||  \\__\\____\\| |  | \\_/||  /_ \n\t\t\t       \\_/  \\_/\\____/      \\_/  \\_/ \\|\\____/      \\_/  \\____/\\____\\\n\n  ________________________\n |                        |\n |        RESTART         |\n |________________________|\n  ________________________\n |                        |\n |         EXIT           |\n |________________________|\n"
 #define RESTART_MENU_RESTART_SELECTED "\t\t\t      _____  _  ____      _____  ____  ____      _____  ____  _____\n\t\t\t     /__ __\\/ \\/   _\\    /__ __\\/  _ \\/   _\\    /__ __\\/  _ \\/  __/\n\t\t\t       / \\  | ||  /  _____ / \\  | / \\||  /  _____ / \\  | / \\||  \\  \n\t\t\t       | |  | ||  \\__\\____\\| |  | |-|||  \\__\\____\\| |  | \\_/||  /_ \n\t\t\t       \\_/  \\_/\\____/      \\_/  \\_/ \\|\\____/      \\_/  \\____/\\____\\\n\n \t ________________________\n \t|                        |\n \t|        RESTART         |\n \t|________________________|\n  ________________________\n |                        |\n |         EXIT           |\n |________________________|\n"
@@ -38,7 +35,6 @@ using namespace std;
 #define VS_STATE_HUM 1
 #define VS_STATE_COM 0
 
-#define HIGH_SCORE_FILE_SIZE 5
 #define HIGH_SCORE_FILE_ARRAY_SIZE 5
 #define HIGH_SCORE_FILE_NAME "high_scores.dat"
 #define HIGH_SCORE_FILE_DEFAULT "Yousef\nNicole\nOwen\nPenny\nMalika\n10\n9\n8\n7\n6\n"
@@ -46,22 +42,22 @@ using namespace std;
 char board[9] = {};
 char arrow;
 int selector, vs_state = 1, player = 1, counter = 0;
-string lineInput;
+std::string lineInput;
 
 class PlayerData{
     public:
-        PlayerData(string str, int num): name(str), score(num){};
+        PlayerData(std::string str, int num): name(str), score(num){};
 
 
-        void setName(string str){name = str;}
+        void setName(std::string str){name = str;}
         void setScore(int num){score = num;}
-        string getName(){return name;}
+        std::string getName(){return name;}
         int getScore(){return score;}
 
         bool isEmpty(){return name.empty();}
         void incScore(){score++;}
     private:
-        string name;
+        std::string name;
         int score;
 };
 
@@ -70,28 +66,27 @@ PlayerData *player2 = new PlayerData("", 0);
 PlayerData *empty = new PlayerData("", 0);
 
 int isEven(int x){return x % 2 == 0 ? 2 : 1;}
-string getName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
+std::string getName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
 
 PlayerData High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE] = {*empty, *empty, *empty, *empty, *empty};
 
 class Scores{
     public:
         static void checkFile(){
-            fstream file;
+            std::fstream file;
             file.open(HIGH_SCORE_FILE_NAME);
             if(!file){
-                file.open(HIGH_SCORE_FILE_NAME, ios::out);
+                file.open(HIGH_SCORE_FILE_NAME, std::ios::out);
                 if(file.is_open()){
-                    for (int i = 0; i < HIGH_SCORE_FILE_SIZE; i++)
-                        file << HIGH_SCORE_FILE_DEFAULT;
+                    file << HIGH_SCORE_FILE_DEFAULT;
                     file.close();
                 }
             }
             file.close();
         }
         static void readHighScores(){
-            fstream file;
-            file.open(HIGH_SCORE_FILE_NAME, ios::in);
+            std::fstream file;
+            file.open(HIGH_SCORE_FILE_NAME, std::ios::in);
             if(file.is_open()){
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
                     getline(file, lineInput);
@@ -106,8 +101,8 @@ class Scores{
             }
         }
         static void saveHighScores(){
-            fstream file;
-            file.open(HIGH_SCORE_FILE_NAME, ios::out);
+            std::fstream file;
+            file.open(HIGH_SCORE_FILE_NAME, std::ios::out);
             if(file.is_open()){
                 for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++)
                     file << High_Scores[i].getName() << "\n";
@@ -147,38 +142,38 @@ class Display{
             system("color a");
             clear();
         }
-        static void refresh(string str){
+        static void refresh(std::string str){
             clear();
             print(str);
         }
         static void printBoard(){
-            cout << player1->getName() << " (X) Score [" << player1->getScore() << "]  -  " << player2->getName() << " (O) Score [" << player2->getScore() << "]" << endl << endl
-                 << "\t\t\t\t\t\tTurn: " << getName(player) << endl << endl
-                 << "\t\t\t\t\t\t     |     |     " << endl
-                 << "\t\t\t\t\t\t  " << board[0] << "  |  " << board[1] << "  |  " << board[2] << endl
-                 << "\t\t\t\t\t\t_____|_____|_____" << endl
-                 << "\t\t\t\t\t\t     |     |     " << endl
-                 << "\t\t\t\t\t\t  " << board[3] << "  |  " << board[4] << "  |  " << board[5] << endl
-                 << "\t\t\t\t\t\t_____|_____|_____" << endl
-                 << "\t\t\t\t\t\t     |     |     " << endl
-                 << "\t\t\t\t\t\t  " << board[6] << "  |  " << board[7] << "  |  " << board[8] << endl
-                 << "\t\t\t\t\t\t     |     |     " << endl << endl;
+            std::cout << player1->getName() << " (X) Score [" << player1->getScore() << "]  -  " << player2->getName() << " (O) Score [" << player2->getScore() << "]" << std::endl << std::endl
+                 << "\t\t\t\t\t\tTurn: " << getName(player) << std::endl << std::endl
+                 << "\t\t\t\t\t\t     |     |     " << std::endl
+                 << "\t\t\t\t\t\t  " << board[0] << "  |  " << board[1] << "  |  " << board[2] << std::endl
+                 << "\t\t\t\t\t\t_____|_____|_____" << std::endl
+                 << "\t\t\t\t\t\t     |     |     " << std::endl
+                 << "\t\t\t\t\t\t  " << board[3] << "  |  " << board[4] << "  |  " << board[5] << std::endl
+                 << "\t\t\t\t\t\t_____|_____|_____" << std::endl
+                 << "\t\t\t\t\t\t     |     |     " << std::endl
+                 << "\t\t\t\t\t\t  " << board[6] << "  |  " << board[7] << "  |  " << board[8] << std::endl
+                 << "\t\t\t\t\t\t     |     |     " << std::endl << std::endl;
         }
         static void printScores(){
             Scores::refreshHighScores();
             refresh(LOGO);
             for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
-                cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ << endl 
-                     << "\t\t\t" << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() /*<< "\t\t"  << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() */<<  endl;
+                std::cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ << std::endl 
+                     << "\t\t\t" << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() /*<< "\t\t"  << "    " <<  High_Scores[i].getName() << "\t|       " << High_Scores[i].getScore() */<<  std::endl;
                 if(i != HIGH_SCORE_FILE_ARRAY_SIZE - 1)
-                    cout << "\t\t\t" << "________________|________________" /*<< "\t" << "________________|________________"*/ <<  endl;
-                else cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ <<  endl;
+                    std::cout << "\t\t\t" << "________________|________________" /*<< "\t" << "________________|________________"*/ <<  std::endl;
+                else std::cout << "\t\t\t" << "                |" /*<< "\t\t\t" << "                |"*/ <<  std::endl;
             }
             system("pause");
         }
     private:
         static void clear(){system("CLS");}
-        static void print(string str){cout << str;}
+        static void print(std::string str){std::cout << str;}
 };
 
 class Navigation{
@@ -346,26 +341,26 @@ class Menus{
                 }
                 break;
             case VS:
-                cout << "\nVS Screen\n";
+                std::cout << "\nTo be Implemented\n";
                 Menus::select(NAME);
                 break;
             case NAME:
                 Display::refresh(LOGO);
                 if(vs_state == VS_STATE_COM){
-                    cout << "Player 1: \n";
-                    getline(cin, lineInput);
+                    std::cout << "Player 1: \n";
+                    getline(std::cin, lineInput);
                     player1->setName(lineInput);
                     if(player1->isEmpty())
                         player1->setName("Player 1");
                 }
                 else{
-                    cout << "Player 1: \n";
-                    getline(cin, lineInput);
+                    std::cout << "Player 1: \n";
+                    getline(std::cin, lineInput);
                     player1->setName(lineInput);
                     if(player1->isEmpty())
                         player1->setName("Player 1");
-                    cout << "\nPlayer 2: \n";
-                    getline(cin, lineInput);
+                    std::cout << "\nPlayer 2: \n";
+                    getline(std::cin, lineInput);
                     player2->setName(lineInput);
                     if(player2->isEmpty())
                         player2->setName("Player 2");
@@ -430,7 +425,7 @@ class Menus{
                 }
                 break;
             case WIN:
-                cout << "\t\t\t\t\t\t" << getName(player) << " Wins!\n";
+                std::cout << "\t\t\t\t\t\t" << getName(player) << " Wins!\n";
                 switch (isEven(player)){
                 case 1:
                     player1->incScore();
@@ -444,7 +439,7 @@ class Menus{
                 Menus::select(RESTART);
                 break;
             case DRAW:
-                cout << "\t\t\t\t\t\tGame is a Draw!\n";
+                std::cout << "\t\t\t\t\t\tGame is a Draw!\n";
                 system("pause");
                 Menus::select(RESTART);
                 break;
@@ -491,7 +486,7 @@ class Menus{
                 exitProgram();
                 break;
             default:
-                cout << "\nMissing Screen\n";
+                std::cout << "\nMissing Screen\n";
                 break;
             }
         }
