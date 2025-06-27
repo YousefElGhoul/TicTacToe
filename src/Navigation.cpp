@@ -1,45 +1,8 @@
 #include "../include/Navigation.hpp"
+#include "../include/Utils.hpp"
 #include "../include/Display.hpp"
-#include "../include/ASCIIArt.hpp"
-#include <iostream>
 
-extern char board[9];
-extern int selector;
-extern int counter;
-
-void removeSelector() {
-    for (int i = 0; i < 9; i++)
-        if (board[i] == '^')
-            board[i] = ' ';
-}
-
-void MoveRight(){
-    selector += 1;
-    selector = selector > 9 ? selector - 9 : selector;
-    if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
-        MoveRight();
-    else{
-        removeSelector();
-        board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
-    }
-}
-
-void MoveLeft(){
-    selector -= 1;
-    selector = selector <= 0 ? selector + 9 : selector;
-    if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
-        MoveLeft();
-    else{
-        removeSelector();
-        board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
-    }
-}
-
-void MoveUp(){
+void Navigation::MoveUp(){
     if(counter == 3){
         counter = 0;
         MoveRight();
@@ -51,14 +14,13 @@ void MoveUp(){
         MoveUp();
     }
     else{
-        removeSelector();
+        Navigation::removeSelector();
         board[selector - 1] = '^';
         Display::refresh(LOGO);
         Display::printBoard();
     }
 }
-
-void MoveDown(){
+void Navigation::MoveDown(){
     if(counter == 3){
         counter = 0;
         MoveLeft();
@@ -70,9 +32,38 @@ void MoveDown(){
         MoveDown();
     }
     else{
-        removeSelector();
+        Navigation::removeSelector();
         board[selector - 1] = '^';
         Display::refresh(LOGO);
         Display::printBoard();
     }
+}
+void Navigation::MoveLeft(){
+    selector -= 1;
+    selector = selector <= 0 ? selector + 9 : selector;
+    if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
+        MoveLeft();
+    else{
+        Navigation::removeSelector();
+        board[selector - 1] = '^';
+        Display::refresh(LOGO);
+        Display::printBoard();
+    }
+}
+void Navigation::MoveRight(){
+    selector += 1;
+    selector = selector > 9 ? selector - 9 : selector;
+    if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
+        MoveRight();
+    else{
+        Navigation::removeSelector();
+        board[selector - 1] = '^';
+        Display::refresh(LOGO);
+        Display::printBoard();
+    }
+}
+void Navigation::removeSelector() {
+    for (int i = 0; i < 9; i++)
+        if (board[i] == '^')
+            board[i] = ' ';
 }

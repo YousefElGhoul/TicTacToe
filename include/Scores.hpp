@@ -1,8 +1,7 @@
 #ifndef SCORES_HPP
 #define SCORES_HPP
-#include "PlayerData.hpp"
 
-#define HIGH_SCORE_FILE_ARRAY_SIZE 5
+#include "PlayerData.hpp"
 
 class Scores {
 public:
@@ -10,8 +9,11 @@ public:
     static void readHighScores();
     static void saveHighScores();
     static void refreshHighScores();
-};
 
-extern PlayerData High_Scores[5];
+private:
+    static void swapData(PlayerData* xp, PlayerData* yp);
+    static void sortData();
+    static void addScore(PlayerData pd);
+};
 
 #endif

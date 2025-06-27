@@ -1,17 +1,17 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
-#include <string>
+#include <iostream>
 
 class Display {
 public:
     static void initDisplay();
-    static void refresh(const std::string& str);
+    static void refresh(std::string str);
     static void printBoard();
     static void printScores();
 
 private:
     static void clear();
-    static void print(const std::string& str);
+    static void print(std::string str);
 };
 
 #endif

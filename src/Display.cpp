@@ -1,31 +1,18 @@
-#include "../include/Display.hpp"
+#include"../include/Display.hpp"
+#include "../include/Utils.hpp"
 #include "../include/Scores.hpp"
-#include "../include/utils.hpp"
-#include "../include/PlayerData.hpp"
-#include "../include/ASCIIArt.hpp"
-#include <iostream>
-#include <cstdlib>
 
-extern char board[9];
-extern int player;
-extern PlayerData High_Scores[5];
-
-void clear(){system("CLS");}
-void print(std::string str){std::cout << str;}
-
-void initDisplay(){
+void Display::initDisplay(){
     system("color a");
     clear();
 }
-
-void refresh(std::string str){
+void Display::refresh(std::string str){
     clear();
     print(str);
 }
-
-void printBoard(){
+void Display::printBoard(){
     std::cout << player1->getName() << " (X) Score [" << player1->getScore() << "]  -  " << player2->getName() << " (O) Score [" << player2->getScore() << "]" << std::endl << std::endl
-            << "\t\t\t\t\t\tTurn: " << getName(player) << std::endl << std::endl
+            << "\t\t\t\t\t\tTurn: " << getCurrentPlayersName(player) << std::endl << std::endl
             << "\t\t\t\t\t\t     |     |     " << std::endl
             << "\t\t\t\t\t\t  " << board[0] << "  |  " << board[1] << "  |  " << board[2] << std::endl
             << "\t\t\t\t\t\t_____|_____|_____" << std::endl
@@ -36,8 +23,7 @@ void printBoard(){
             << "\t\t\t\t\t\t  " << board[6] << "  |  " << board[7] << "  |  " << board[8] << std::endl
             << "\t\t\t\t\t\t     |     |     " << std::endl << std::endl;
 }
-
-void printScores(){
+void Display::printScores(){
     Scores::refreshHighScores();
     refresh(LOGO);
     for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE; i++){
@@ -49,3 +35,5 @@ void printScores(){
     }
     system("pause");
 }
+void Display::clear(){system("CLS");}
+void Display::print(std::string str){std::cout << str;}

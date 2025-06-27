@@ -1,32 +1,9 @@
-#include "../include/TicTacToe.hpp"
+#include "../include/Utils.hpp"
 
-extern char board[9];
-
-static void clearBoard() {
-    for (int i = 0; i < 9; i++)
-        board[i] = ' ';
-}
-
-static void initGame(){
+void TicTacToe::initGame(){
     clearBoard();
 }
-
-// int TicTacToe::checkWin() {
-//     char win_patterns[8][3] = {
-//         {0,1,2},{3,4,5},{6,7,8},
-//         {0,3,6},{1,4,7},{2,5,8},
-//         {0,4,8},{2,4,6}
-//     };
-//     for (auto& pattern : win_patterns) {
-//         if (board[pattern[0]] == board[pattern[1]] && board[pattern[1]] == board[pattern[2]] && board[pattern[0]] != ' ') {
-//             return GAME_STATE_RESULT;
-//         }
-//     }
-//     for (int i = 0; i < 9; i++) if (board[i] == ' ') return GAME_STATE_ONGOING;
-//     return GAME_STATE_DRAW;
-// }
-
-static int checkWin(){
+int TicTacToe::checkWin(){
     if (board[0] == board[1] && board[1] == board[2] && board[2] == 'X')
         return GAME_STATE_RESULT;
     else if (board[0] == board[1] && board[1] == board[2] && board[2] == 'O')
@@ -64,3 +41,22 @@ static int checkWin(){
     else
         return GAME_STATE_ONGOING;
 }
+void TicTacToe::clearBoard() {
+    for (int i = 0; i < 9; i++)
+        board[i] = ' ';
+}
+
+// int TicTacToe::checkWin() {
+//     char win_patterns[8][3] = {
+//         {0,1,2},{3,4,5},{6,7,8},
+//         {0,3,6},{1,4,7},{2,5,8},
+//         {0,4,8},{2,4,6}
+//     };
+//     for (auto& pattern : win_patterns) {
+//         if (board[pattern[0]] == board[pattern[1]] && board[pattern[1]] == board[pattern[2]] && board[pattern[0]] != ' ') {
+//             return GAME_STATE_RESULT;
+//         }
+//     }
+//     for (int i = 0; i < 9; i++) if (board[i] == ' ') return GAME_STATE_ONGOING;
+//     return GAME_STATE_DRAW;
+// }

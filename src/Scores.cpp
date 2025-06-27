@@ -1,31 +1,7 @@
-#include "../include/utils.hpp"
 #include "../include/Scores.hpp"
-#include <fstream>
-#include <string>
+#include "../include/Utils.hpp"
 
-#define HIGH_SCORE_FILE_ARRAY_SIZE 5
-#define HIGH_SCORE_FILE_NAME "high_scores.dat"
-#define HIGH_SCORE_FILE_DEFAULT "Yousef\nNicole\nOwen\nPenny\nMalika\n10\n9\n8\n7\n6\n"
-
-PlayerData High_Scores[5] = {*empty, *empty, *empty, *empty, *empty};
-
-extern std::string lineInput;
-
-void swapData(PlayerData* xp, PlayerData* yp){
-    PlayerData temp = *xp;
-    *xp = *yp;
-    *yp = temp;
-}
-
-void sortData(){
-    for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE - 1; i++)
-        for (int j = 0; j < HIGH_SCORE_FILE_ARRAY_SIZE - i - 1; j++)
-            if(High_Scores[j].getScore() < High_Scores[j+1].getScore())
-                swapData(&High_Scores[j], &High_Scores[j+1]);
-}
-
-
-void checkFile(){
+void Scores::checkFile(){
     std::fstream file;
     file.open(HIGH_SCORE_FILE_NAME);
     if(!file){
@@ -37,8 +13,7 @@ void checkFile(){
     }
     file.close();
 }
-
-void readHighScores(){
+void Scores::readHighScores(){
     std::fstream file;
     file.open(HIGH_SCORE_FILE_NAME, std::ios::in);
     if(file.is_open()){
@@ -54,8 +29,7 @@ void readHighScores(){
         sortData();
     }
 }
-
-void saveHighScores(){
+void Scores::saveHighScores(){
     std::fstream file;
     file.open(HIGH_SCORE_FILE_NAME, std::ios::out);
     if(file.is_open()){
@@ -66,16 +40,25 @@ void saveHighScores(){
         file.close();
     }
 }
-
-void addScore(PlayerData pd){
+void Scores::refreshHighScores(){
+    addScore(*player1);
+    addScore(*player2);
+    saveHighScores();
+}
+void Scores::swapData(PlayerData* xp, PlayerData* yp){
+    PlayerData temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+void Scores::sortData(){
+    for (int i = 0; i < HIGH_SCORE_FILE_ARRAY_SIZE - 1; i++)
+        for (int j = 0; j < HIGH_SCORE_FILE_ARRAY_SIZE - i - 1; j++)
+            if(High_Scores[j].getScore() < High_Scores[j+1].getScore())
+                swapData(&High_Scores[j], &High_Scores[j+1]);
+}
+void Scores::addScore(PlayerData pd){
     if(pd.getScore() > High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE - 1].getScore()){
         High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE - 1] = pd;
         sortData();
     }
-}
-
-void refreshHighScores(){
-    addScore(*player1);
-    addScore(*player2);
-    saveHighScores();
 }
