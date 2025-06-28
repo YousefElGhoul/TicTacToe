@@ -1,5 +1,5 @@
 #include "../include/Scores.hpp"
-#include "../include/Utils.hpp"
+#include "../include/utils.hpp"
 
 void Scores::checkFile(){
     std::fstream file;

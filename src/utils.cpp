@@ -1,4 +1,4 @@
-#include "../include/Utils.hpp"
+#include "../include/utils.hpp"
 
 char board[9] = {};
 char arrow;
@@ -11,8 +11,8 @@ PlayerData *empty = new PlayerData("", 0);
 
 PlayerData High_Scores[HIGH_SCORE_FILE_ARRAY_SIZE] = {*empty, *empty, *empty, *empty, *empty};
 
-int isEven(int x){return x % 2 == 0 ? 2 : 1;}
-std::string getCurrentPlayersName(int player){return isEven(player) == 1 ? player1->getName() : player2->getName();}
+int isEven(int x) { return x % 2 == 0 ? 2 : 1; }
+std::string getCurrentPlayersName(int player) { return isEven(player) == 1 ? player1->getName() : player2->getName(); }
 
 void initProgram(){
     Scores::checkFile();

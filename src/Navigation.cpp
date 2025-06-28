@@ -1,8 +1,8 @@
 #include "../include/Navigation.hpp"
-#include "../include/Utils.hpp"
+#include "../include/utils.hpp"
 #include "../include/Display.hpp"
 
-void Navigation::MoveUp(){
+void GameNavigation::MoveUp(){
     if(counter == 3){
         counter = 0;
         MoveRight();
@@ -14,13 +14,11 @@ void Navigation::MoveUp(){
         MoveUp();
     }
     else{
-        Navigation::removeSelector();
+        GameNavigation::removeSelector();
         board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
     }
 }
-void Navigation::MoveDown(){
+void GameNavigation::MoveDown(){
     if(counter == 3){
         counter = 0;
         MoveLeft();
@@ -32,38 +30,94 @@ void Navigation::MoveDown(){
         MoveDown();
     }
     else{
-        Navigation::removeSelector();
+        GameNavigation::removeSelector();
         board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
     }
 }
-void Navigation::MoveLeft(){
+void GameNavigation::MoveLeft(){
     selector -= 1;
     selector = selector <= 0 ? selector + 9 : selector;
     if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
         MoveLeft();
     else{
-        Navigation::removeSelector();
+        GameNavigation::removeSelector();
         board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
     }
 }
-void Navigation::MoveRight(){
+void GameNavigation::MoveRight(){
     selector += 1;
     selector = selector > 9 ? selector - 9 : selector;
     if (board[selector - 1] == 'X' || board[selector - 1] == 'O')
         MoveRight();
     else{
-        Navigation::removeSelector();
+        GameNavigation::removeSelector();
         board[selector - 1] = '^';
-        Display::refresh(LOGO);
-        Display::printBoard();
     }
 }
-void Navigation::removeSelector() {
+void GameNavigation::removeSelector() {
     for (int i = 0; i < 9; i++)
         if (board[i] == '^')
             board[i] = ' ';
+}
+
+void GameNavigation::Nav() {
+    arrow = getch();
+    do {
+        switch (arrow) {
+        case KEY_ESC:
+            exitProgram();
+        default:
+            arrow = getch();
+            switch (arrow) {
+            case KEY_UP:
+                GameNavigation::MoveUp();
+                Display::showBoard();
+                break;
+            case KEY_DOWN:
+                GameNavigation::MoveDown();
+                Display::showBoard();
+                break;
+            case KEY_LEFT:
+                GameNavigation::MoveLeft();
+                Display::showBoard();
+                break;
+            case KEY_RIGHT:
+                GameNavigation::MoveRight();
+                Display::showBoard();
+                break;
+            case KEY_ESC:
+                exitProgram();
+            default:
+                break;
+            }
+            break;
+        }
+    } while (arrow != KEY_ENTER);
+}
+
+void MenuNavigation::Nav(int button1, int button2) {
+    arrow = getch();
+    do {
+        switch (arrow) {
+        case KEY_ESC:
+            exitProgram();
+        default:
+            arrow = getch();
+            switch (arrow) {
+            case KEY_UP:
+                Display::showMenu(button1);
+                selector = '1';
+                break;
+            case KEY_DOWN:
+                Display::showMenu(button2);
+                selector = '2';
+                break;
+            case KEY_ESC:
+                exitProgram();
+            default:
+                break;
+            }
+            break;
+        }
+    } while (arrow != KEY_ENTER);
 }

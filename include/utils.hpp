@@ -1,6 +1,15 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include "Display.hpp"
+#include "Scores.hpp"
+#include "TicTacToe.hpp"
+#include "Menus.hpp"
+#include "PlayerData.hpp"
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+
 #define START                       0
 #define GAME                        1
 #define VS                          2
@@ -28,16 +37,6 @@
 #define HIGH_SCORE_FILE_ARRAY_SIZE  5
 #define HIGH_SCORE_FILE_NAME        "high_scores.dat"
 #define HIGH_SCORE_FILE_DEFAULT     "Yousef\nNicole\nOwen\nPenny\nMalika\n10\n9\n8\n7\n6\n"
-
-#include "ASCIIArt.hpp"
-#include "Display.hpp"
-#include "Scores.hpp"
-#include "TicTacToe.hpp"
-#include "Menus.hpp"
-#include "PlayerData.hpp"
-#include <iostream>
-#include <fstream>
-#include <conio.h>
 
 extern char board[9];
 extern char arrow;
