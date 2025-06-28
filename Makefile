@@ -5,46 +5,50 @@
 
 CXX = g++
 
-CXXFLAGS	:= -std=c++17 -Wall -Wextra -g
+CXXFLAGS	:= -std=c++20 -Wall -Wextra -g
 
 OUTPUT	:= output
 
 SRC		:= src
 
 INCLUDE	:= include
+UNAME_S := $(shell uname -s)
 
-ifeq ($(OS),Windows_NT)
-MAIN	:= main.exe
-SOURCEDIRS	:= $(SRC)
-INCLUDEDIRS	:= $(INCLUDE)
-FIXPATH = $(subst /,\,$1)
-RM			:= del /q /f
-MD	:= mkdir
-MKDIR_P = if not exist "$(subst /,\,$(dir $@))" mkdir "$(subst /,\,$(dir $@))"
+ifeq ($(UNAME_S),Linux)
+    MAIN        := main
+    RM          := rm -f
+    MD          := mkdir -p
+    FIXPATH     = $1
+else ifeq ($(UNAME_S),Darwin)
+    MAIN        := main
+    RM          := rm -f
+    MD          := mkdir -p
+    FIXPATH     = $1
+else ifneq (,$(findstring MINGW,$(UNAME_S)))
+    MAIN        := main.exe
+    RM          := rm -f
+    MD          := mkdir -p
+    FIXPATH     = $1
+else ifneq (,$(findstring MSYS,$(UNAME_S)))
+    MAIN        := main.exe
+    RM          := rm -f
+    MD          := mkdir -p
+    FIXPATH     = $1
 else
-MAIN	:= main
-SOURCEDIRS	:= $(shell find $(SRC) -type d)
-INCLUDEDIRS	:= $(shell find $(INCLUDE) -type d)
-FIXPATH = $1
-RM = rm -f
-MD	:= mkdir -p
-MKDIR_P = mkdir -p $(dir $@)
+    $(error Unsupported OS: $(UNAME_S))
 endif
 
-# ===================================================================
 
-# define the C source files
-SOURCES	:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+SOURCEDIRS     := $(shell find $(SRC) -type d)
+INCLUDEDIRS    := $(shell find $(INCLUDE) -type d)
 
-# create object file names under the output directory
+INCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
+
+SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+
 OBJECTS := $(patsubst $(SRC)/%.cpp,$(OUTPUT)/%.o,$(SOURCES))
 
-# include flags
-INCLUDES := $(patsubst %,-I%,$(INCLUDEDIRS))
-
-# Output binary path
-OUTPUTMAIN := $(call FIXPATH,$(OUTPUT)/$(MAIN))
-
+OUTPUTMAIN	:= $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
 
 all: $(OUTPUT) $(MAIN)
@@ -53,14 +57,13 @@ all: $(OUTPUT) $(MAIN)
 $(OUTPUT):
 	$(MD) $(OUTPUT)
 
-# Pattern rule to compile .cpp to .o into output folder
-$(OUTPUT)/%.o: $(SRC)/%.cpp
-	$(MKDIR_P)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
 $(MAIN): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS)
 
+# Pattern rule to compile .cpp to .o into output folder
+$(OUTPUT)/%.o: $(SRC)/%.cpp
+	$(MD) $(OUTPUT)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # this is a suffix replacement rule for building .o's and .d's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
@@ -72,8 +75,8 @@ $(MAIN): $(OBJECTS)
 
 .PHONY: clean
 clean:
-	$(RM) $(OUTPUTMAIN)
-	$(RM) $(call FIXPATH,$(OBJECTS))
+	rm -f $(OUTPUT)/main.exe
+	rm -f $(OBJECTS)
 	@echo Cleanup complete!
 
 run: all
