@@ -1,3 +1,29 @@
+<!--
+---
+portfolio:
+  title: "Tic Tac Toe"
+  subtitle: "Cross-Platform CLI Game"
+  type:
+    - C++
+    - CLI
+  status: "Completed"
+  time: "2025"
+
+  description: "A console-based Tic Tac Toe game written in C++ with keyboard-driven navigation, customizable player names, persistent high scores, and a simple cross-platform build setup."
+
+  skills:
+    - C++
+    - CLI
+    - Make
+    - Game Logic
+    - Data Structures
+    - Cross-Platform Development
+
+  live: null
+  slug: "tic-tac-toe"
+---
+-->
+
 # TicTacToe
 
 This is a simple C++ based game of TicTacToe
