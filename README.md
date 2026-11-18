@@ -6,7 +6,7 @@ portfolio:
   type:
     - C++
     - CLI
-  status: "Completed"
+  status: "Archived"
   time: "2025"
 
   description: "A console-based Tic Tac Toe game written in C++ with keyboard-driven navigation, customizable player names, persistent high scores, and a simple cross-platform build setup."
